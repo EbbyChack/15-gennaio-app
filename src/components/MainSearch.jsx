@@ -1,10 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState  } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Container, Row, Col, Form } from "react-bootstrap";
+import { setJobs, addToFavorites } from "../redux";
 import Job from "./Job";
 
 const MainSearch = () => {
   const [query, setQuery] = useState("");
-  const [jobs, setJobs] = useState([]);
+  const dispatch = useDispatch();
+  const jobs = useSelector((state) => state.jobs)
+
+  const addToFavoritesHandler = (company) => {
+    dispatch(addToFavorites(company));
+  };
 
   const baseEndpoint = "https://strive-benchmark.herokuapp.com/api/jobs?search=";
 
@@ -19,7 +26,7 @@ const MainSearch = () => {
       const response = await fetch(baseEndpoint + query + "&limit=20");
       if (response.ok) {
         const { data } = await response.json();
-        setJobs(data);
+        dispatch(setJobs(data));
       } else {
         alert("Error fetching results");
       }
@@ -41,7 +48,7 @@ const MainSearch = () => {
         </Col>
         <Col xs={10} className="mx-auto mb-5">
           {jobs.map(jobData => (
-            <Job key={jobData._id} data={jobData} />
+            <Job key={jobData._id} data={jobData} onAddToFavorites={() => addToFavoritesHandler(jobData.company_name)} />
           ))}
         </Col>
       </Row>

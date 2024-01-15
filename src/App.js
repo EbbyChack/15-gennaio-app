@@ -3,15 +3,21 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import MainSearch from "./components/MainSearch";
 import CompanySearchResults from "./components/CompanySearchResults";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Provider } from "react-redux";
+import store from "./redux";
+import Favorites from "./components/Favorites";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<MainSearch />} />
-        <Route path="/:company" element={<CompanySearchResults />} />
-      </Routes>
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<MainSearch />} />
+          <Route path="/:company" element={<CompanySearchResults />} />
+          <Route path="/favorites" element={<Favorites />} />
+        </Routes>
+      </BrowserRouter>
+    </Provider>
   );
 }
 
